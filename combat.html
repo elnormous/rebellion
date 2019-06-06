@@ -237,7 +237,23 @@
 				}
 			}
 
-			content.appendChild(unitsTable);
+            let resetRow = unitsTable.insertRow();
+            let resetCell = resetRow.insertCell();
+            resetCell.colSpan = 2;
+            
+            let resetButton = document.createElement("input");
+            resetButton.type = "button";
+            resetButton.value = "reset";
+            resetButton.onclick = function() {
+                for (let amountBoxNum in amountBoxes) {
+                    let amountBox = amountBoxes[amountBoxNum];
+                    amountBox.value = 0;
+                    update();
+                }
+            }
+            resetCell.appendChild(resetButton);
+
+            content.appendChild(unitsTable);
 		};
 	</script>
 </head>
