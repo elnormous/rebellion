@@ -30,6 +30,21 @@
 			font-weight: bold;
 			text-align: center;
 		}
+
+		table#loyalty td.subjugated {
+			color: white;
+			background-color: rgb(80, 80, 80);
+		}
+
+		table#loyalty td.imperial {
+			color: white;
+			background-color: black;
+		}
+
+		table#loyalty td.rebel {
+			color: white;
+			background-color: red;
+		}
 	</style>
 	<script>
 		// factions
@@ -175,15 +190,26 @@
 				let loyaltyBox = loyaltyBoxes[i];
 				let systemId = loyaltyBox.getAttribute("system");
 				let units = systems[systemId]["production"];
+				let systemCell = document.getElementById("system-" + systemId);
+				systemCell.classList.remove("subjugated", "imperial", "rebel");
 
 				if (loyaltyBox.value == SUBJUGATED)
+				{
+					systemCell.classList.add("subjugated");
 					production[EMPIRE + "-" + units[0]["theater"] + "-" + units[0]["unit"] + "-" + units[0]["space"]] += 1;
+				}
 				else if (loyaltyBox.value == IMPERIAL)
+				{
+					systemCell.classList.add("imperial");
 					for (let unitId in units)
 						production[EMPIRE + "-" + units[unitId]["theater"] + "-" + units[unitId]["unit"] + "-" + units[unitId]["space"]] += 1;
+				}
 				else if (loyaltyBox.value == REBEL)
+				{
+					systemCell.classList.add("rebel");
 					for (let unitId in units)
 						production[REBELLION + "-" + units[unitId]["theater"] + "-" + units[unitId]["unit"] + "-" + units[unitId]["space"]] += 1;
+				}
 			}
 
 			for (let i in production) {
@@ -207,7 +233,9 @@
 				let system = systems[systemId];
 
 				let systemRow = loyaltyTable.insertRow();
+
 				let systemCell = systemRow.insertCell();
+				systemCell.id = "system-" + systemId;
 				systemCell.textContent = system["name"];
 
 				let loyaltyCell = systemRow.insertCell();
