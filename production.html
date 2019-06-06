@@ -170,7 +170,7 @@
 
 		let loyaltyBoxes = [];
 
-		function updateProduction() {
+		function update() {
 			let production = {};
 
 			for (let factionId in factions) {
@@ -242,7 +242,7 @@
 				let loyaltyBox = document.createElement("select");
 				loyaltyBox.setAttribute("system", systemId);
 				loyaltyBox.onchange = function() {
-					updateProduction();
+					update();
 				};
 				for (let loyaltyId in loyalties) {
 					let loyalty = loyalties[loyaltyId];
@@ -265,7 +265,7 @@
 
 			content.appendChild(loyaltyTable);
 
-			updateProduction();
+			update();
 		};
 	</script>
 </head>
