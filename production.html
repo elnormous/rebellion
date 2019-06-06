@@ -1,0 +1,315 @@
+<html>
+<head>
+	<title>Production</title>
+	<style>
+		table#loyalty {
+			border: 1px solid black;
+			border-collapse: collapse;
+			display: inline-block;
+		}
+		table#loyalty tr.header {
+			background-color: grey;
+			color: white;
+			text-align: center;
+		}
+		table#loyalty tr.header td {
+			font-weight: bold;
+		}
+
+		table#loyalty td {
+			padding: 2px;
+		}
+
+		table#production {
+			border: 1px solid black;
+			border-collapse: collapse;
+			display: inline-block;
+		}
+
+		table#production td.faction {
+			font-weight: bold;
+			text-align: center;
+		}
+	</style>
+	<script>
+		// factions
+		let REBELLION = 0;
+		let EMPIRE = 1;
+		let factions = [REBELLION, EMPIRE];
+
+		// theaters
+		let SPACE = 0;
+		let GROUND = 1;
+		let theaters = [SPACE, GROUND];
+
+		// units
+		let TRIANGLE = 0;
+		let CIRCLE = 1;
+		let SQUARE = 2;
+		let units = [TRIANGLE, CIRCLE, SQUARE];
+
+		// loyalties
+		let NEUTRAL = 0;
+		let SUBJUGATED = 1;
+		let IMPERIAL = 2;
+		let REBEL = 3;
+
+		let loyalties = [
+			{"name": "Neutral", "value": NEUTRAL},
+			{"name": "Subjugated", "value": SUBJUGATED},
+			{"name": "Imperial", "value": IMPERIAL},
+			{"name": "Rebel", "value": REBEL}
+		];
+
+		let systems = [
+			{"name": "Alderaan", "production": [
+				{"theater": GROUND, "unit": TRIANGLE, "space": 1}
+			]},
+			{"name": "Bespin", "production": [
+				{"theater": GROUND, "unit": CIRCLE, "space": 1}
+			]},
+			{"name": "Bothawui", "production": [
+				{"theater": GROUND, "unit": CIRCLE, "space": 1}
+			]},
+			{"name": "Cato Neimoidia", "production": [
+				{"theater": SPACE, "unit": TRIANGLE, "space": 2},
+				{"theater": GROUND, "unit": CIRCLE, "space": 2}
+			]},
+			{"name": "Corellia", "production": [
+				{"theater": SPACE, "unit": TRIANGLE, "space": 3},
+				{"theater": SPACE, "unit": SQUARE, "space": 3}
+			]},
+			{"name": "Coruscant", "loyalty": IMPERIAL, "production": [
+				{"theater": GROUND, "unit": TRIANGLE, "space": 1}
+			]},
+			{"name": "Felucia", "production": [
+				{"theater": GROUND, "unit": TRIANGLE, "space": 1}
+			]},
+			{"name": "Geonosis", "production": [
+				{"theater": SPACE, "unit": TRIANGLE, "space": 2},
+				{"theater": GROUND, "unit": SQUARE, "space": 2}
+			]},
+			{"name": "Kashyyyk", "production": [
+				{"theater": GROUND, "unit": TRIANGLE, "space": 1},
+				{"theater": GROUND, "unit": TRIANGLE, "space": 1}
+			]},
+			{"name": "Kessel", "production": [
+				{"theater": GROUND, "unit": TRIANGLE, "space": 1}
+			]},
+			{"name": "Malastare", "production": [
+				{"theater": GROUND, "unit": TRIANGLE, "space": 1}
+			]},
+			{"name": "Mandalore", "production": [
+				{"theater": SPACE, "unit": TRIANGLE, "space": 1},
+				{"theater": GROUND, "unit": TRIANGLE, "space": 1}
+			]},
+			{"name": "Mon Calamari", "production": [
+				{"theater": SPACE, "unit": TRIANGLE, "space": 3},
+				{"theater": SPACE, "unit": SQUARE, "space": 3}
+			]},
+			{"name": "Mustafar", "production": [
+				{"theater": SPACE, "unit": TRIANGLE, "space": 2},
+				{"theater": SPACE, "unit": CIRCLE, "space": 2}
+			]},
+			{"name": "Mygeeto", "production": [
+				{"theater": SPACE, "unit": TRIANGLE, "space": 2},
+				{"theater": GROUND, "unit": SQUARE, "space": 2}
+			]},
+			{"name": "Naboo", "production": [
+				{"theater": SPACE, "unit": TRIANGLE, "space": 1},
+				{"theater": SPACE, "unit": TRIANGLE, "space": 1}
+			]},
+			{"name": "Nal Hutta", "production": [
+				{"theater": SPACE, "unit": TRIANGLE, "space": 1},
+				{"theater": GROUND, "unit": TRIANGLE, "space": 1}
+			]},
+			{"name": "Ord Mantell", "production": [
+				{"theater": SPACE, "unit": CIRCLE, "space": 2},
+				{"theater": GROUND, "unit": CIRCLE, "space": 2}
+			]},
+			{"name": "Rebel Base", "loyalty": REBEL, "production": [
+				{"theater": SPACE, "unit": TRIANGLE, "space": 1},
+				{"theater": GROUND, "unit": TRIANGLE, "space": 1}
+			]},
+			{"name": "Rodia", "production": [
+				{"theater": GROUND, "unit": TRIANGLE, "space": 1}
+			]},
+			{"name": "Ryloth", "production": [
+				{"theater": GROUND, "unit": TRIANGLE, "space": 1}
+			]},
+			{"name": "Saleucami", "production": [
+				{"theater": GROUND, "unit": CIRCLE, "space": 1}
+			]},
+			{"name": "Sullust", "production": [
+				{"theater": GROUND, "unit": TRIANGLE, "space": 2},
+				{"theater": GROUND, "unit": SQUARE, "space": 2}
+			]},
+			{"name": "Toydaria", "production": [
+				{"theater": SPACE, "unit": CIRCLE, "space": 2},
+			]},
+			{"name": "Utapau", "production": [
+				{"theater": SPACE, "unit": CIRCLE, "space": 3},
+				{"theater": SPACE, "unit": SQUARE, "space": 3}
+			]}
+		];
+
+		let loyaltyBoxes = [];
+
+		function updateProduction() {
+			let production = {};
+
+			for (let factionId in factions) {
+				let faction = factions[factionId];
+				for (let theaterId in theaters) {
+					let theater = theaters[theaterId];
+					for (let unitId in units) {
+						let unit = units[unitId];
+						for (let space = 1; space <= 3; ++space) {
+							production[faction + "-" + theater + "-" + unit + "-" + space] = 0;
+						}
+					}
+				}
+			}
+
+			for (let i in loyaltyBoxes) {
+				let loyaltyBox = loyaltyBoxes[i];
+				let systemId = loyaltyBox.getAttribute("system");
+				let units = systems[systemId]["production"];
+
+				if (loyaltyBox.value == SUBJUGATED)
+					production[EMPIRE + "-" + units[0]["theater"] + "-" + units[0]["unit"] + "-" + units[0]["space"]] += 1;
+				else if (loyaltyBox.value == IMPERIAL)
+					for (let unitId in units)
+						production[EMPIRE + "-" + units[unitId]["theater"] + "-" + units[unitId]["unit"] + "-" + units[unitId]["space"]] += 1;
+				else if (loyaltyBox.value == REBEL)
+					for (let unitId in units)
+						production[REBELLION + "-" + units[unitId]["theater"] + "-" + units[unitId]["unit"] + "-" + units[unitId]["space"]] += 1;
+			}
+
+			for (let i in production) {
+				let productionRow = document.getElementById(i);
+				productionRow.textContent = production[i];
+			}
+		}
+
+		window.onload = function() {
+			let content = document.getElementById("content");
+			let loyaltyTable = document.createElement("table");
+			loyaltyTable.id = "loyalty";
+			let headerRow = loyaltyTable.insertRow();
+			headerRow.classList.add("header");
+			let systemHeader = headerRow.insertCell();
+			systemHeader.textContent = "System";
+			let loyaltyHeader = headerRow.insertCell();
+			loyaltyHeader.textContent = "Loyalty";
+
+			for (let systemId in systems) {
+				let system = systems[systemId];
+
+				let systemRow = loyaltyTable.insertRow();
+				let systemCell = systemRow.insertCell();
+				systemCell.textContent = system["name"];
+
+				let loyaltyCell = systemRow.insertCell();
+				let loyaltyBox = document.createElement("select");
+				loyaltyBox.setAttribute("system", systemId);
+				loyaltyBox.onchange = function() {
+					updateProduction();
+				};
+				for (let loyaltyId in loyalties) {
+					let loyalty = loyalties[loyaltyId];
+					let loyaltyOption = document.createElement("option");
+					loyaltyOption.textContent = loyalty["name"];
+					loyaltyOption.value = loyalty["value"];
+
+					if (system["loyalty"] != undefined &&
+						system["loyalty"] == loyalty["value"])
+					{
+						loyaltyOption.selected = true;
+						loyaltyBox.disabled = true;
+					}
+
+					loyaltyBox.appendChild(loyaltyOption);
+				}
+				loyaltyCell.appendChild(loyaltyBox);
+				loyaltyBoxes.push(loyaltyBox);
+			}
+
+			content.appendChild(loyaltyTable);
+
+			updateProduction();
+		};
+	</script>
+</head>
+<body>
+	<div id="content">
+		<table id="production">
+			<tr>
+				<td>Production</td>
+				<td><svg width="16" height="16"><polygon points="8,0 16,16 0,16" fill="#2f328f" /></svg></td>
+				<td><svg width="16" height="16"><circle cx="8" cy="8" r="8" fill="#2f328f" /></svg></td>
+				<td><svg width="16" height="16"><rect cx="8" cy="8" width="16" height="16" fill="#2f328f" /></svg></td>
+				<td><svg width="16" height="16"><polygon points="8,0 16,16 0,16" fill="#cc873e" /></svg></td>
+				<td><svg width="16" height="16"><circle cx="8" cy="8" r="8" fill="#cc873e" /></svg></td>
+				<td><svg width="16" height="16"><rect cx="8" cy="8" width="16" height="16" fill="#cc873e" /></svg></td>
+			</tr>
+			<tr><td class="faction" colspan="7">Rebel</td></tr>
+			<tr>
+				<td>1</td>
+				<td id="0-0-0-1">0</td>
+				<td id="0-0-1-1">0</td>
+				<td id="0-0-2-1">0</td>
+				<td id="0-1-0-1">0</td>
+				<td id="0-1-1-1">0</td>
+				<td id="0-1-2-1">0</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td id="0-0-0-2">0</td>
+				<td id="0-0-1-2">0</td>
+				<td id="0-0-2-2">0</td>
+				<td id="0-1-0-2">0</td>
+				<td id="0-1-1-2">0</td>
+				<td id="0-1-2-2">0</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td id="0-0-0-3">0</td>
+				<td id="0-0-1-3">0</td>
+				<td id="0-0-2-3">0</td>
+				<td id="0-1-0-3">0</td>
+				<td id="0-1-1-3">0</td>
+				<td id="0-1-2-3">0</td>
+			</tr>
+			<tr><td class="faction" colspan="7">Imperial</td></tr>
+			<tr>
+				<td>1</td>
+				<td id="1-0-0-1">0</td>
+				<td id="1-0-1-1">0</td>
+				<td id="1-0-2-1">0</td>
+				<td id="1-1-0-1">0</td>
+				<td id="1-1-1-1">0</td>
+				<td id="1-1-2-1">0</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td id="1-0-0-2">0</td>
+				<td id="1-0-1-2">0</td>
+				<td id="1-0-2-2">0</td>
+				<td id="1-1-0-2">0</td>
+				<td id="1-1-1-2">0</td>
+				<td id="1-1-2-2">0</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td id="1-0-0-3">0</td>
+				<td id="1-0-1-3">0</td>
+				<td id="1-0-2-3">0</td>
+				<td id="1-1-0-3">0</td>
+				<td id="1-1-1-3">0</td>
+				<td id="1-1-2-3">0</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>
