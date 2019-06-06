@@ -186,8 +186,8 @@
 				}
 			}
 
-			for (let i in loyaltyBoxes) {
-				let loyaltyBox = loyaltyBoxes[i];
+			for (let loyaltyBoxNum in loyaltyBoxes) {
+				let loyaltyBox = loyaltyBoxes[loyaltyBoxNum];
 				let systemId = loyaltyBox.getAttribute("system");
 				let units = systems[systemId]["production"];
 				let systemCell = document.getElementById("system-" + systemId);
@@ -213,7 +213,7 @@
 			}
 
 			for (let i in production) {
-				let productionRow = document.getElementById(i);
+				let productionRow = document.getElementById("production-" + i);
 				productionRow.textContent = production[i];
 			}
 		}
@@ -284,58 +284,58 @@
 			<tr><td class="faction" colspan="7">Rebel</td></tr>
 			<tr>
 				<td>1</td>
-				<td id="0-0-0-1">0</td>
-				<td id="0-0-1-1">0</td>
-				<td id="0-0-2-1">0</td>
-				<td id="0-1-0-1">0</td>
-				<td id="0-1-1-1">0</td>
-				<td id="0-1-2-1">0</td>
+				<td id="production-0-0-0-1">0</td>
+				<td id="production-0-0-1-1">0</td>
+				<td id="production-0-0-2-1">0</td>
+				<td id="production-0-1-0-1">0</td>
+				<td id="production-0-1-1-1">0</td>
+				<td id="production-0-1-2-1">0</td>
 			</tr>
 			<tr>
 				<td>2</td>
-				<td id="0-0-0-2">0</td>
-				<td id="0-0-1-2">0</td>
-				<td id="0-0-2-2">0</td>
-				<td id="0-1-0-2">0</td>
-				<td id="0-1-1-2">0</td>
-				<td id="0-1-2-2">0</td>
+				<td id="production-0-0-0-2">0</td>
+				<td id="production-0-0-1-2">0</td>
+				<td id="production-0-0-2-2">0</td>
+				<td id="production-0-1-0-2">0</td>
+				<td id="production-0-1-1-2">0</td>
+				<td id="production-0-1-2-2">0</td>
 			</tr>
 			<tr>
 				<td>3</td>
-				<td id="0-0-0-3">0</td>
-				<td id="0-0-1-3">0</td>
-				<td id="0-0-2-3">0</td>
-				<td id="0-1-0-3">0</td>
-				<td id="0-1-1-3">0</td>
-				<td id="0-1-2-3">0</td>
+				<td id="production-0-0-0-3">0</td>
+				<td id="production-0-0-1-3">0</td>
+				<td id="production-0-0-2-3">0</td>
+				<td id="production-0-1-0-3">0</td>
+				<td id="production-0-1-1-3">0</td>
+				<td id="production-0-1-2-3">0</td>
 			</tr>
 			<tr><td class="faction" colspan="7">Imperial</td></tr>
 			<tr>
 				<td>1</td>
-				<td id="1-0-0-1">0</td>
-				<td id="1-0-1-1">0</td>
-				<td id="1-0-2-1">0</td>
-				<td id="1-1-0-1">0</td>
-				<td id="1-1-1-1">0</td>
-				<td id="1-1-2-1">0</td>
+				<td id="production-1-0-0-1">0</td>
+				<td id="production-1-0-1-1">0</td>
+				<td id="production-1-0-2-1">0</td>
+				<td id="production-1-1-0-1">0</td>
+				<td id="production-1-1-1-1">0</td>
+				<td id="production-1-1-2-1">0</td>
 			</tr>
 			<tr>
 				<td>2</td>
-				<td id="1-0-0-2">0</td>
-				<td id="1-0-1-2">0</td>
-				<td id="1-0-2-2">0</td>
-				<td id="1-1-0-2">0</td>
-				<td id="1-1-1-2">0</td>
-				<td id="1-1-2-2">0</td>
+				<td id="production-1-0-0-2">0</td>
+				<td id="production-1-0-1-2">0</td>
+				<td id="production-1-0-2-2">0</td>
+				<td id="production-1-1-0-2">0</td>
+				<td id="production-1-1-1-2">0</td>
+				<td id="production-1-1-2-2">0</td>
 			</tr>
 			<tr>
 				<td>3</td>
-				<td id="1-0-0-3">0</td>
-				<td id="1-0-1-3">0</td>
-				<td id="1-0-2-3">0</td>
-				<td id="1-1-0-3">0</td>
-				<td id="1-1-1-3">0</td>
-				<td id="1-1-2-3">0</td>
+				<td id="production-1-0-0-3">0</td>
+				<td id="production-1-0-1-3">0</td>
+				<td id="production-1-0-2-3">0</td>
+				<td id="production-1-1-0-3">0</td>
+				<td id="production-1-1-1-3">0</td>
+				<td id="production-1-1-2-3">0</td>
 			</tr>
 		</table>
 	</div>

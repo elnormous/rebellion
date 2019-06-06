@@ -1,0 +1,262 @@
+<html>
+<head>
+	<title>Combat</title>
+	<style>
+		table#units {
+			border: 1px solid black;
+			border-collapse: collapse;
+			display: inline-block;
+		}
+
+		table#units tr.faction {
+			font-weight: bold;
+			background-color: black;
+			color: white;
+		}
+
+        table#dice-abilities {
+			border: 1px solid black;
+			border-collapse: collapse;
+			display: inline-block;
+        }
+
+        table#dice-abilities tr.faction {
+            font-weight: bold;
+			background-color: black;
+			color: white;
+        }
+
+        table#dice-abilities tr.faction td {
+            width: 400px;
+        }
+
+        table#dice-abilities tr.theater td {
+            font-weight: bold;
+            color: white;
+        }
+
+        table#dice-abilities tr.theater.space {
+            background-color: blue;
+        }
+
+        table#dice-abilities tr.theater.ground {
+            background-color: orange;
+        }
+
+        table#dice-abilities tr.abilities td {
+            width: 400px;
+        }
+	</style>
+	<script>
+		// factions
+		let REBELLION = 0;
+		let EMPIRE = 1;
+        let factions = [REBELLION, EMPIRE];
+        
+        function getFactionName(faction) {
+            switch (faction) {
+                case REBELLION: return "Rebellion";
+                case EMPIRE: return "Empire";
+            }
+        }
+
+		// theaters
+		let SPACE = 0;
+		let GROUND = 1;
+		let theaters = [SPACE, GROUND];
+
+		// dice
+		let BLACK = 0;
+		let RED = 1;
+        let GREEN = 2;
+        let dice = [BLACK, RED, GREEN];
+
+        function getDieName(faction) {
+            switch (faction) {
+                case BLACK: return "Black";
+                case RED: return "Red";
+                case GREEN: return "Green";
+            }
+        }
+
+		let units = [
+			{"name": "X-Wing", "faction": REBELLION, "theater": SPACE, "dice": [BLACK]},
+			{"name": "Y-Wing", "faction": REBELLION, "theater": SPACE, "dice": [RED]},
+			{"name": "Rebel Transport", "faction": REBELLION, "theater": SPACE},
+			{"name": "Corellian Corvette", "faction": REBELLION, "theater": SPACE, "dice": [BLACK, RED]},
+			{"name": "Mon Calamari Cruiser", "faction": REBELLION, "theater": SPACE, "dice": [BLACK, RED, RED]},
+
+			{"name": "Rebel Trooper", "faction": REBELLION, "theater": GROUND, "dice": [BLACK]},
+			{"name": "Airspeeder", "faction": REBELLION, "theater": GROUND, "dice": [BLACK, RED]},
+			{"name": "Shield Generator", "faction": REBELLION, "theater": GROUND, "abilities": ["At the start of each ground battle step, draw 1 ground tactic card."]},
+			{"name": "Ion Cannon", "faction": REBELLION, "theater": GROUND, "abilities": ["During each space battle step, your opponent rolls 2 fewer dice."]},
+
+			{"name": "TIE Fighter", "faction": EMPIRE, "theater": SPACE, "dice": [BLACK]},
+			{"name": "Assault Carrier", "faction": EMPIRE, "theater": SPACE, "dice": [BLACK, RED]},
+			{"name": "Star Destroyer", "faction": EMPIRE, "theater": SPACE, "dice": [BLACK, RED, RED]},
+			{"name": "Super Star Destroyer", "faction": EMPIRE, "theater": SPACE, "dice": [BLACK, BLACK, RED, RED, RED]},
+			{"name": "Death Star Under Construction", "faction": EMPIRE, "theater": SPACE},
+			{"name": "Death Star", "faction": EMPIRE, "theater": SPACE, "dice": [RED, RED, RED, RED]},
+
+			{"name": "Stormtrooper", "faction": EMPIRE, "theater": GROUND, "dice": [BLACK]},
+			{"name": "AT-ST", "faction": EMPIRE, "theater": GROUND, "dice": [BLACK, RED]},
+			{"name": "AT-AT", "faction": EMPIRE, "theater": GROUND, "dice": [BLACK, RED, RED]},
+
+			{"name": "TIE Striker", "faction": EMPIRE, "theater": SPACE, "dice": [GREEN]},
+			{"name": "Interdictor", "faction": EMPIRE, "theater": SPACE, "dice": [GREEN, GREEN], "abilities": ["Rebel units in this system cannot retreat."]},
+
+			{"name": "Assault Tank", "faction": EMPIRE, "theater": GROUND, "dice": [GREEN]},
+			{"name": "Shield Bunker", "faction": EMPIRE, "theater": GROUND, "abilities": ["Space Stations in this system cannot be destroyed. Enables deployment in remote system."]},
+		];
+
+        let amountBoxes = [];
+
+		// TODO: update dice and abilities
+		function update() {
+            let diceAbilities = {};
+
+            for (let factionId in factions) {
+				let faction = factions[factionId];
+				for (let theaterId in theaters) {
+                    let theater = theaters[theaterId];
+
+                    for (let dieId in dice) {
+                        let die = dice[dieId];
+                        diceAbilities["dice-" + faction + "-" + theater + "-" + die] = 0;
+                    }
+
+                    diceAbilities["abilities-" + faction + "-" + theater] = [];
+                }
+            }
+
+            for (let amountBoxNum in amountBoxes) {
+                let amountBox = amountBoxes[amountBoxNum];
+                let unitId = amountBox.getAttribute("unit");
+                let unit = units[unitId];
+                let amount = parseInt(amountBox.value);
+
+                for (let i = 0; i < amount; ++i)
+                {
+                    if (unit.dice != undefined)
+                    {
+                        for (let dieNum in unit.dice)
+                        {
+                            let die = unit.dice[dieNum];
+                            let amount = diceAbilities["dice-" + unit["faction"] + "-" + unit["theater"] + "-" + die];
+                            amount += 1;
+                            if (die == RED || die == BLACK)
+                            {
+                                if (amount > 5) amount = 5;
+                            }
+                            else if (die == GREEN)
+                            {
+                                if (amount > 3) amount = 3;
+                            }
+
+                            diceAbilities["dice-" + unit["faction"] + "-" + unit["theater"] + "-" + die] = amount;
+                        }
+                    }
+
+                    if (unit.abilities != undefined)
+                        for (let abilityNum in unit.abilities)
+                        {
+                            let ability = unit.abilities[abilityNum];
+                            diceAbilities["abilities-" + unit["faction"] + "-" + unit["theater"]].push(ability);
+                        }
+                }
+            }
+
+            for (let factionId in factions) {
+				let faction = factions[factionId];
+				for (let theaterId in theaters) {
+                    let theater = theaters[theaterId];
+                    let diceRow = document.getElementById("dice-" + faction + "-" + theater);
+                    diceRow.textContent = "";
+                    let first = true;
+
+                    for (let dieId in dice) {
+                        let die = dice[dieId];
+                        let amount = diceAbilities["dice-" + faction + "-" + theater + "-" + die];
+                        if (amount > 0)
+                        {
+                            if (first) first = false;
+                            else  diceRow.textContent += ", ";
+                            diceRow.textContent += amount + " " + getDieName(die);
+                        }
+                    }
+
+                    first = true;
+
+                    let abilitiesRow = document.getElementById("abilities-" + faction + "-" + theater);
+                    abilitiesRow.textContent = "";
+                    for (let abilityNum in diceAbilities["abilities-" + faction + "-" + theater])
+                    {
+                        let ability = diceAbilities["abilities-" + faction + "-" + theater][abilityNum];
+                        if (first) first = false;
+                        else  abilitiesRow.textContent += " ";
+                        abilitiesRow.textContent += ability;
+                    }
+                }
+            }
+		}
+
+		window.onload = function() {
+			let content = document.getElementById("content");
+			let unitsTable = document.createElement("table");
+			unitsTable.id = "units";
+
+			for (let factionId in factions) {
+				let faction = factions[factionId];
+
+				let factionRow = unitsTable.insertRow();
+				factionRow.classList.add("faction");
+				let factionCell = factionRow.insertCell();
+				factionCell.colSpan = 2;
+				factionCell.textContent = getFactionName(faction);
+
+				for (let unitId in units) {
+					let unit = units[unitId];
+
+					if (unit.faction == faction) {
+						let unitRow = unitsTable.insertRow();
+						let nameCell = unitRow.insertCell();
+						nameCell.textContent = unit["name"];
+						let amountCell = unitRow.insertCell();
+                        let amountInput = document.createElement("input");
+                        amountInput.setAttribute("unit", unitId);
+                        amountInput.type = "number";
+                        amountInput.value = 0;
+						amountInput.onchange = function() {
+							update();
+						}
+                        amountCell.appendChild(amountInput);
+                        amountBoxes.push(amountInput);
+					}
+				}
+			}
+
+			content.appendChild(unitsTable);
+		};
+	</script>
+</head>
+<body>
+	<div id="content">
+        <table id="dice-abilities">
+            <tr class="faction" colspan="2"><td>Rebellion</td></tr>
+            <tr class="theater space"><td>Space</td></tr>
+            <tr class="space dice"><td id="dice-0-0"></td></tr>
+            <tr class="space abilities"><td id="abilities-0-0"></td></tr>
+            <tr class="theater ground"><td>Ground</td></tr>
+            <tr class="ground dice"><td id="dice-0-1"></td></tr>
+            <tr class="ground abilities"><td id="abilities-0-1"></td></tr>
+            <tr class="faction" colspan="2"><td>Empire</td></tr>
+            <tr class="theater space"><td>Space</td></tr>
+            <tr class="space dice"><td id="dice-1-0"></td></tr>
+            <tr class="space abilities"><td id="abilities-1-0"></td></tr>
+            <tr class="theater ground"><td>Ground</td></tr>
+            <tr class="ground dice"><td id="dice-1-1"></td></tr>
+            <tr class="ground abilities"><td id="abilities-1-1"></td></tr>
+        </table>
+	</div>
+</body>
+</html>
