@@ -170,8 +170,6 @@
 			]}
 		];
 
-		let loyaltyBoxes = [];
-
 		function update() {
 			let production = {};
 
@@ -188,29 +186,33 @@
 				}
 			}
 
-			for (let loyaltyBoxNum in loyaltyBoxes) {
-				let loyaltyBox = loyaltyBoxes[loyaltyBoxNum];
-				let systemId = loyaltyBox.getAttribute("system");
-				let units = systems[systemId]["production"];
+			for (let systemId in systems) {
+                let system = systems[systemId];
+                let loyaltyBox = system.loyaltyBox;
+                let sabotageBox = system.sabotageBox;
+				let units = system["production"];
 				let systemCell = document.getElementById("system-" + systemId);
 				systemCell.classList.remove("subjugated", "imperial", "rebel");
 
 				if (loyaltyBox.value == SUBJUGATED)
 				{
-					systemCell.classList.add("subjugated");
-					production[EMPIRE + "-" + units[0]["theater"] + "-" + units[0]["unit"] + "-" + units[0]["space"]] += 1;
+                    systemCell.classList.add("subjugated");
+                    if (!sabotageBox.checked)
+					    production[EMPIRE + "-" + units[0]["theater"] + "-" + units[0]["unit"] + "-" + units[0]["space"]] += 1;
 				}
 				else if (loyaltyBox.value == IMPERIAL)
 				{
-					systemCell.classList.add("imperial");
-					for (let unitId in units)
-						production[EMPIRE + "-" + units[unitId]["theater"] + "-" + units[unitId]["unit"] + "-" + units[unitId]["space"]] += 1;
+                    systemCell.classList.add("imperial");
+                    if (!sabotageBox.checked)
+					    for (let unitId in units)
+						    production[EMPIRE + "-" + units[unitId]["theater"] + "-" + units[unitId]["unit"] + "-" + units[unitId]["space"]] += 1;
 				}
 				else if (loyaltyBox.value == REBEL)
 				{
-					systemCell.classList.add("rebel");
-					for (let unitId in units)
-						production[REBELLION + "-" + units[unitId]["theater"] + "-" + units[unitId]["unit"] + "-" + units[unitId]["space"]] += 1;
+                    systemCell.classList.add("rebel");
+                    if (!sabotageBox.checked)
+					    for (let unitId in units)
+						    production[REBELLION + "-" + units[unitId]["theater"] + "-" + units[unitId]["unit"] + "-" + units[unitId]["space"]] += 1;
 				}
 			}
 
@@ -229,7 +231,9 @@
 			let systemHeader = headerRow.insertCell();
 			systemHeader.textContent = "System";
 			let loyaltyHeader = headerRow.insertCell();
-			loyaltyHeader.textContent = "Loyalty";
+            loyaltyHeader.textContent = "Loyalty";
+            let sabotageHeader = headerRow.insertCell();
+			sabotageHeader.textContent = "Sabotage";
 
 			for (let systemId in systems) {
 				let system = systems[systemId];
@@ -242,7 +246,6 @@
 
 				let loyaltyCell = systemRow.insertCell();
 				let loyaltyBox = document.createElement("select");
-				loyaltyBox.setAttribute("system", systemId);
 				loyaltyBox.onchange = function() {
 					update();
 				};
@@ -262,7 +265,17 @@
 					loyaltyBox.appendChild(loyaltyOption);
 				}
 				loyaltyCell.appendChild(loyaltyBox);
-				loyaltyBoxes.push(loyaltyBox);
+                system.loyaltyBox = loyaltyBox;
+
+                let sabotageCell = systemRow.insertCell();
+                let sabotageBox = document.createElement("input");
+                sabotageBox.type = "checkbox";
+				sabotageBox.setAttribute("system", systemId);
+				sabotageBox.onchange = function() {
+					update();
+                };
+                sabotageCell.appendChild(sabotageBox);
+                system.sabotageBox = sabotageBox;
 			}
 
 			content.appendChild(loyaltyTable);
