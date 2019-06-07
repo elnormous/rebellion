@@ -48,6 +48,14 @@
         table#dice-abilities tr.abilities td {
             width: 400px;
         }
+
+        input.button {
+            border: 1px solid black;
+            margin: 2px;
+            outline: none;
+            width: 32px;
+            height: 32px;
+        }
 	</style>
 	<script>
 		// factions
@@ -230,11 +238,37 @@
                         amountInput.setAttribute("unit", unitId);
                         amountInput.type = "number";
                         amountInput.value = 0;
+                        amountInput.min = 0;
 						amountInput.onchange = function() {
 							update();
 						}
                         amountCell.appendChild(amountInput);
                         amountBoxes.push(amountInput);
+
+                        let incrementButton = document.createElement("input");
+                        incrementButton.type = "button";
+                        incrementButton.classList.add("button");
+                        incrementButton.value = "+";
+						incrementButton.onclick = function() {
+                            let value = parseInt(amountInput.value);
+                            amountInput.value = value + 1;
+							update();
+						}
+                        amountCell.appendChild(incrementButton);
+
+                        let decrementButton = document.createElement("input");
+                        decrementButton.type = "button";
+                        decrementButton.classList.add("button");
+                        decrementButton.value = "-";
+						decrementButton.onclick = function() {
+                            let value = parseInt(amountInput.value);
+                            if (value > 0)
+                            {
+                                amountInput.value = value - 1;
+                                update();
+                            }
+						}
+                        amountCell.appendChild(decrementButton);
 					}
 				}
 			}
