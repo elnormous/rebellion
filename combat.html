@@ -241,7 +241,7 @@
                         amountInput.min = 0;
 						amountInput.onchange = function() {
 							update();
-						}
+						};
                         amountCell.appendChild(amountInput);
                         amountBoxes.push(amountInput);
 
@@ -253,7 +253,7 @@
                             let value = parseInt(amountInput.value);
                             amountInput.value = value + 1;
 							update();
-						}
+						};
                         amountCell.appendChild(incrementButton);
 
                         let decrementButton = document.createElement("input");
@@ -267,7 +267,7 @@
                                 amountInput.value = value - 1;
                                 update();
                             }
-						}
+						};
                         amountCell.appendChild(decrementButton);
 					}
 				}
@@ -286,7 +286,7 @@
                     amountBox.value = 0;
                     update();
                 }
-            }
+            };
             resetCell.appendChild(resetButton);
 
             content.appendChild(unitsTable);
