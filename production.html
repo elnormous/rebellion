@@ -67,13 +67,11 @@
 
 		// loyalties
 		let NEUTRAL = 0;
-		let SUBJUGATED = 1;
-		let IMPERIAL = 2;
-		let REBEL = 3;
+		let IMPERIAL = 1;
+		let REBEL = 2;
 
 		let loyalties = [
 			{"name": "Neutral", "value": NEUTRAL},
-			{"name": "Subjugated", "value": SUBJUGATED},
 			{"name": "Imperial", "value": IMPERIAL},
 			{"name": "Rebel", "value": REBEL}
 		];
@@ -189,12 +187,13 @@
 			for (let systemId in systems) {
                 let system = systems[systemId];
                 let loyaltyBox = system.loyaltyBox;
+				let subjugatedBox = system.subjugatedBox;
                 let sabotageBox = system.sabotageBox;
 				let units = system["production"];
 				let systemCell = document.getElementById("system-" + systemId);
 				systemCell.classList.remove("subjugated", "imperial", "rebel");
 
-				if (loyaltyBox.value == SUBJUGATED)
+				if (subjugatedBox.checked)
 				{
                     systemCell.classList.add("subjugated");
                     if (!sabotageBox.checked)
@@ -232,7 +231,9 @@
 			systemHeader.textContent = "System";
 			let loyaltyHeader = headerRow.insertCell();
             loyaltyHeader.textContent = "Loyalty";
-            let sabotageHeader = headerRow.insertCell();
+            let subjugatedHeader = headerRow.insertCell();
+			subjugatedHeader.textContent = "Subjugated";
+			let sabotageHeader = headerRow.insertCell();
 			sabotageHeader.textContent = "Sabotage";
 
 			for (let systemId in systems) {
@@ -249,6 +250,19 @@
 				loyaltyBox.onchange = function() {
 					update();
 				};
+				loyaltyCell.appendChild(loyaltyBox);
+                system.loyaltyBox = loyaltyBox;
+
+				let subjugatedCell = systemRow.insertCell();
+                let subjugatedBox = document.createElement("input");
+                subjugatedBox.type = "checkbox";
+				subjugatedBox.setAttribute("system", systemId);
+				subjugatedBox.onchange = function() {
+					update();
+                };
+                subjugatedCell.appendChild(subjugatedBox);
+                system.subjugatedBox = subjugatedBox;
+
 				for (let loyaltyId in loyalties) {
 					let loyalty = loyalties[loyaltyId];
 					let loyaltyOption = document.createElement("option");
@@ -260,12 +274,11 @@
 					{
 						loyaltyOption.selected = true;
 						loyaltyBox.disabled = true;
+						subjugatedBox.disabled = true;
 					}
 
 					loyaltyBox.appendChild(loyaltyOption);
 				}
-				loyaltyCell.appendChild(loyaltyBox);
-                system.loyaltyBox = loyaltyBox;
 
                 let sabotageCell = systemRow.insertCell();
                 let sabotageBox = document.createElement("input");
