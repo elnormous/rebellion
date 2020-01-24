@@ -59,9 +59,9 @@
 	</style>
 	<script>
 		// factions
-		let REBELLION = 0;
-		let EMPIRE = 1;
-        let factions = [REBELLION, EMPIRE];
+		const REBELLION = 0;
+		const EMPIRE = 1;
+        const factions = [REBELLION, EMPIRE];
         
         function getFactionName(faction) {
             switch (faction) {
@@ -71,15 +71,15 @@
         }
 
 		// theaters
-		let SPACE = 0;
-		let GROUND = 1;
-		let theaters = [SPACE, GROUND];
+		const SPACE = 0;
+		const GROUND = 1;
+		const theaters = [SPACE, GROUND];
 
 		// dice
-		let BLACK = 0;
-		let RED = 1;
-        let GREEN = 2;
-        let dice = [BLACK, RED, GREEN];
+		const BLACK = 0;
+		const RED = 1;
+        const GREEN = 2;
+        const dice = [BLACK, RED, GREEN];
 
         function getDieName(faction) {
             switch (faction) {
@@ -89,7 +89,7 @@
             }
         }
 
-		let units = [
+		const units = [
 			{"name": "X-Wing", "faction": REBELLION, "theater": SPACE, "dice": [BLACK]},
 			{"name": "Y-Wing", "faction": REBELLION, "theater": SPACE, "dice": [RED]},
 			{"name": "Rebel Transport", "faction": REBELLION, "theater": SPACE},
@@ -127,13 +127,13 @@
 		function update() {
             let diceAbilities = {};
 
-            for (let factionId in factions) {
-				let faction = factions[factionId];
-				for (let theaterId in theaters) {
-                    let theater = theaters[theaterId];
+            for (const factionId in factions) {
+				const faction = factions[factionId];
+				for (const theaterId in theaters) {
+                    const theater = theaters[theaterId];
 
-                    for (let dieId in dice) {
-                        let die = dice[dieId];
+                    for (const dieId in dice) {
+                        const die = dice[dieId];
                         diceAbilities["dice-" + faction + "-" + theater + "-" + die] = 0;
                     }
 
@@ -141,19 +141,19 @@
                 }
             }
 
-            for (let amountBoxNum in amountBoxes) {
+            for (const amountBoxNum in amountBoxes) {
                 let amountBox = amountBoxes[amountBoxNum];
-                let unitId = amountBox.getAttribute("unit");
-                let unit = units[unitId];
+                const unitId = amountBox.getAttribute("unit");
+                const unit = units[unitId];
                 let amount = parseInt(amountBox.value);
 
                 for (let i = 0; i < amount; ++i)
                 {
                     if (unit.dice != undefined)
                     {
-                        for (let dieNum in unit.dice)
+                        for (const dieNum in unit.dice)
                         {
-                            let die = unit.dice[dieNum];
+                            const die = unit.dice[dieNum];
                             let amount = diceAbilities["dice-" + unit["faction"] + "-" + unit["theater"] + "-" + die];
                             amount += 1;
                             if (die == RED || die == BLACK)
@@ -170,25 +170,25 @@
                     }
 
                     if (unit.abilities != undefined)
-                        for (let abilityNum in unit.abilities)
+                        for (const abilityNum in unit.abilities)
                         {
-                            let ability = unit.abilities[abilityNum];
+                            const ability = unit.abilities[abilityNum];
                             diceAbilities["abilities-" + unit["faction"] + "-" + unit["theater"]].push(ability);
                         }
                 }
             }
 
-            for (let factionId in factions) {
-				let faction = factions[factionId];
-				for (let theaterId in theaters) {
-                    let theater = theaters[theaterId];
+            for (const factionId in factions) {
+				const faction = factions[factionId];
+				for (const theaterId in theaters) {
+                    const theater = theaters[theaterId];
                     let diceRow = document.getElementById("dice-" + faction + "-" + theater);
                     diceRow.textContent = "";
                     let first = true;
 
-                    for (let dieId in dice) {
-                        let die = dice[dieId];
-                        let amount = diceAbilities["dice-" + faction + "-" + theater + "-" + die];
+                    for (const dieId in dice) {
+                        const die = dice[dieId];
+                        const amount = diceAbilities["dice-" + faction + "-" + theater + "-" + die];
                         if (amount > 0)
                         {
                             if (first) first = false;
@@ -203,7 +203,7 @@
                     abilitiesRow.textContent = "";
                     for (let abilityNum in diceAbilities["abilities-" + faction + "-" + theater])
                     {
-                        let ability = diceAbilities["abilities-" + faction + "-" + theater][abilityNum];
+                        const ability = diceAbilities["abilities-" + faction + "-" + theater][abilityNum];
                         if (first) first = false;
                         else  abilitiesRow.textContent += " ";
                         abilitiesRow.textContent += ability;
@@ -217,8 +217,8 @@
 			let unitsTable = document.createElement("table");
 			unitsTable.id = "units";
 
-			for (let factionId in factions) {
-				let faction = factions[factionId];
+			for (const factionId in factions) {
+				const faction = factions[factionId];
 
 				let factionRow = unitsTable.insertRow();
 				factionRow.classList.add("faction");
@@ -226,8 +226,8 @@
 				factionCell.colSpan = 2;
 				factionCell.textContent = getFactionName(faction);
 
-				for (let unitId in units) {
-					let unit = units[unitId];
+				for (const unitId in units) {
+					const unit = units[unitId];
 
 					if (unit.faction == faction) {
 						let unitRow = unitsTable.insertRow();
@@ -250,7 +250,7 @@
                         incrementButton.classList.add("button");
                         incrementButton.value = "+";
 						incrementButton.onclick = function() {
-                            let value = parseInt(amountInput.value);
+                            const value = parseInt(amountInput.value);
                             amountInput.value = value + 1;
 							update();
 						};
@@ -261,7 +261,7 @@
                         decrementButton.classList.add("button");
                         decrementButton.value = "-";
 						decrementButton.onclick = function() {
-                            let value = parseInt(amountInput.value);
+                            const value = parseInt(amountInput.value);
                             if (value > 0)
                             {
                                 amountInput.value = value - 1;
@@ -281,7 +281,7 @@
             resetButton.type = "button";
             resetButton.value = "reset";
             resetButton.onclick = function() {
-                for (let amountBoxNum in amountBoxes) {
+                for (const amountBoxNum in amountBoxes) {
                     let amountBox = amountBoxes[amountBoxNum];
                     amountBox.value = 0;
                     update();

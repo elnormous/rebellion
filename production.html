@@ -215,7 +215,7 @@
 
                     systemCell.classList.add("imperial");
                     if (!sabotageBox.checked)
-					    for (let unitId in units)
+					    for (const unitId in units)
 						    production[EMPIRE + "-" + units[unitId]["theater"] + "-" + units[unitId]["unit"] + "-" + units[unitId]["space"]] += 1;
 				}
 				else if (subjugatedBox.checked)
@@ -231,7 +231,7 @@
 
                     systemCell.classList.add("rebel");
                     if (!sabotageBox.checked)
-					    for (let unitId in units)
+					    for (const unitId in units)
 						    production[REBELLION + "-" + units[unitId]["theater"] + "-" + units[unitId]["unit"] + "-" + units[unitId]["space"]] += 1;
 				}
 			}
@@ -261,7 +261,7 @@
 			sabotageHeader.textContent = "Sabotage";
 
 			for (const systemId in systems) {
-				let system = systems[systemId];
+				const system = systems[systemId];
 
 				let systemRow = loyaltyTable.insertRow();
 
