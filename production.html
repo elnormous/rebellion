@@ -21,11 +21,20 @@
 			padding: 2px;
 		}
 
+		#production-loyalty {
+			display: inline-block;
+            vertical-align: top;
+		}
+
+		table#system-loyalty {
+			border: 1px solid black;
+			border-collapse: collapse;
+			margin-bottom: 2px;
+		}
+
 		table#production {
 			border: 1px solid black;
 			border-collapse: collapse;
-			display: inline-block;
-            vertical-align: top;
 		}
 
 		table#production td.faction {
@@ -172,6 +181,8 @@
 			let production = {};
 			let rebelSystems = 0;
 			let imperialSystems = 0;
+			let rebelSystemsBox = document.getElementById("rebel-systems");
+			let imperialSystemsBox = document.getElementById("imperial-systems");
 
 			for (const factionId in factions) {
 				const faction = factions[factionId];
@@ -200,6 +211,8 @@
 
 				if (loyaltyBox.value == IMPERIAL)
 				{
+					++imperialSystems;
+
                     systemCell.classList.add("imperial");
                     if (!sabotageBox.checked)
 					    for (let unitId in units)
@@ -213,6 +226,9 @@
 				}
 				else if (loyaltyBox.value == REBEL)
 				{
+					if (system.loyalty == undefined) // not a rebel base
+						++rebelSystems;
+
                     systemCell.classList.add("rebel");
                     if (!sabotageBox.checked)
 					    for (let unitId in units)
@@ -224,6 +240,9 @@
 				let productionRow = document.getElementById("production-" + i);
 				productionRow.textContent = production[i];
 			}
+
+			rebelSystemsBox.textContent = rebelSystems;
+			imperialSystemsBox.textContent = imperialSystems;
 		}
 
 		window.onload = function() {
@@ -304,73 +323,85 @@
 </head>
 <body>
 	<div id="content">
-		<table id="production">
-			<tr>
-				<td>Production</td>
-				<td><svg width="16" height="16"><polygon points="8,0 16,16 0,16" fill="#2f328f" /></svg></td>
-				<td><svg width="16" height="16"><circle cx="8" cy="8" r="8" fill="#2f328f" /></svg></td>
-				<td><svg width="16" height="16"><rect cx="8" cy="8" width="16" height="16" fill="#2f328f" /></svg></td>
-				<td><svg width="16" height="16"><polygon points="8,0 16,16 0,16" fill="#cc873e" /></svg></td>
-				<td><svg width="16" height="16"><circle cx="8" cy="8" r="8" fill="#cc873e" /></svg></td>
-				<td><svg width="16" height="16"><rect cx="8" cy="8" width="16" height="16" fill="#cc873e" /></svg></td>
-			</tr>
-			<tr><td class="faction" colspan="7">Rebel</td></tr>
-			<tr>
-				<td>1</td>
-				<td id="production-0-0-0-1">0</td>
-				<td id="production-0-0-1-1">0</td>
-				<td id="production-0-0-2-1">0</td>
-				<td id="production-0-1-0-1">0</td>
-				<td id="production-0-1-1-1">0</td>
-				<td id="production-0-1-2-1">0</td>
-			</tr>
-			<tr>
-				<td>2</td>
-				<td id="production-0-0-0-2">0</td>
-				<td id="production-0-0-1-2">0</td>
-				<td id="production-0-0-2-2">0</td>
-				<td id="production-0-1-0-2">0</td>
-				<td id="production-0-1-1-2">0</td>
-				<td id="production-0-1-2-2">0</td>
-			</tr>
-			<tr>
-				<td>3</td>
-				<td id="production-0-0-0-3">0</td>
-				<td id="production-0-0-1-3">0</td>
-				<td id="production-0-0-2-3">0</td>
-				<td id="production-0-1-0-3">0</td>
-				<td id="production-0-1-1-3">0</td>
-				<td id="production-0-1-2-3">0</td>
-			</tr>
-			<tr><td class="faction" colspan="7">Imperial</td></tr>
-			<tr>
-				<td>1</td>
-				<td id="production-1-0-0-1">0</td>
-				<td id="production-1-0-1-1">0</td>
-				<td id="production-1-0-2-1">0</td>
-				<td id="production-1-1-0-1">0</td>
-				<td id="production-1-1-1-1">0</td>
-				<td id="production-1-1-2-1">0</td>
-			</tr>
-			<tr>
-				<td>2</td>
-				<td id="production-1-0-0-2">0</td>
-				<td id="production-1-0-1-2">0</td>
-				<td id="production-1-0-2-2">0</td>
-				<td id="production-1-1-0-2">0</td>
-				<td id="production-1-1-1-2">0</td>
-				<td id="production-1-1-2-2">0</td>
-			</tr>
-			<tr>
-				<td>3</td>
-				<td id="production-1-0-0-3">0</td>
-				<td id="production-1-0-1-3">0</td>
-				<td id="production-1-0-2-3">0</td>
-				<td id="production-1-1-0-3">0</td>
-				<td id="production-1-1-1-3">0</td>
-				<td id="production-1-1-2-3">0</td>
-			</tr>
-		</table>
+		<div id="production-loyalty">
+			<table id="system-loyalty">
+				<tr>
+					<td>Rebel systems</td>
+					<td><span id="rebel-systems"></div></td>
+				</tr>
+				<tr>
+					<td>Imperial systems</td>
+					<td><span id="imperial-systems"></div></td>
+				</tr>
+			</table>
+			<table id="production">
+				<tr>
+					<td>Production</td>
+					<td><svg width="16" height="16"><polygon points="8,0 16,16 0,16" fill="#2f328f" /></svg></td>
+					<td><svg width="16" height="16"><circle cx="8" cy="8" r="8" fill="#2f328f" /></svg></td>
+					<td><svg width="16" height="16"><rect cx="8" cy="8" width="16" height="16" fill="#2f328f" /></svg></td>
+					<td><svg width="16" height="16"><polygon points="8,0 16,16 0,16" fill="#cc873e" /></svg></td>
+					<td><svg width="16" height="16"><circle cx="8" cy="8" r="8" fill="#cc873e" /></svg></td>
+					<td><svg width="16" height="16"><rect cx="8" cy="8" width="16" height="16" fill="#cc873e" /></svg></td>
+				</tr>
+				<tr><td class="faction" colspan="7">Rebel</td></tr>
+				<tr>
+					<td>1</td>
+					<td id="production-0-0-0-1">0</td>
+					<td id="production-0-0-1-1">0</td>
+					<td id="production-0-0-2-1">0</td>
+					<td id="production-0-1-0-1">0</td>
+					<td id="production-0-1-1-1">0</td>
+					<td id="production-0-1-2-1">0</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td id="production-0-0-0-2">0</td>
+					<td id="production-0-0-1-2">0</td>
+					<td id="production-0-0-2-2">0</td>
+					<td id="production-0-1-0-2">0</td>
+					<td id="production-0-1-1-2">0</td>
+					<td id="production-0-1-2-2">0</td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td id="production-0-0-0-3">0</td>
+					<td id="production-0-0-1-3">0</td>
+					<td id="production-0-0-2-3">0</td>
+					<td id="production-0-1-0-3">0</td>
+					<td id="production-0-1-1-3">0</td>
+					<td id="production-0-1-2-3">0</td>
+				</tr>
+				<tr><td class="faction" colspan="7">Imperial</td></tr>
+				<tr>
+					<td>1</td>
+					<td id="production-1-0-0-1">0</td>
+					<td id="production-1-0-1-1">0</td>
+					<td id="production-1-0-2-1">0</td>
+					<td id="production-1-1-0-1">0</td>
+					<td id="production-1-1-1-1">0</td>
+					<td id="production-1-1-2-1">0</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td id="production-1-0-0-2">0</td>
+					<td id="production-1-0-1-2">0</td>
+					<td id="production-1-0-2-2">0</td>
+					<td id="production-1-1-0-2">0</td>
+					<td id="production-1-1-1-2">0</td>
+					<td id="production-1-1-2-2">0</td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td id="production-1-0-0-3">0</td>
+					<td id="production-1-0-1-3">0</td>
+					<td id="production-1-0-2-3">0</td>
+					<td id="production-1-1-0-3">0</td>
+					<td id="production-1-1-1-3">0</td>
+					<td id="production-1-1-2-3">0</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 </body>
 </html>
