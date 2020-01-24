@@ -170,6 +170,8 @@
 
 		function update() {
 			let production = {};
+			let rebelSystems = 0;
+			let imperialSystems = 0;
 
 			for (const factionId in factions) {
 				const faction = factions[factionId];
@@ -193,18 +195,21 @@
 				let systemCell = document.getElementById("system-" + systemId);
 				systemCell.classList.remove("subjugated", "imperial", "rebel");
 
-				if (subjugatedBox.checked)
-				{
-                    systemCell.classList.add("subjugated");
-                    if (!sabotageBox.checked)
-					    production[EMPIRE + "-" + units[0]["theater"] + "-" + units[0]["unit"] + "-" + units[0]["space"]] += 1;
-				}
-				else if (loyaltyBox.value == IMPERIAL)
+				subjugatedBox.disabled = (system.loyalty != undefined || loyaltyBox.value == IMPERIAL);
+				if (subjugatedBox.disabled) subjugatedBox.checked = false;
+
+				if (loyaltyBox.value == IMPERIAL)
 				{
                     systemCell.classList.add("imperial");
                     if (!sabotageBox.checked)
 					    for (let unitId in units)
 						    production[EMPIRE + "-" + units[unitId]["theater"] + "-" + units[unitId]["unit"] + "-" + units[unitId]["space"]] += 1;
+				}
+				else if (subjugatedBox.checked)
+				{
+                    systemCell.classList.add("subjugated");
+                    if (!sabotageBox.checked)
+					    production[EMPIRE + "-" + units[0]["theater"] + "-" + units[0]["unit"] + "-" + units[0]["space"]] += 1;
 				}
 				else if (loyaltyBox.value == REBEL)
 				{
