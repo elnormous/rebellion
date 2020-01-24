@@ -50,33 +50,33 @@
 	</style>
 	<script>
 		// factions
-		let REBELLION = 0;
-		let EMPIRE = 1;
-		let factions = [REBELLION, EMPIRE];
+		const REBELLION = 0;
+		const EMPIRE = 1;
+		const factions = [REBELLION, EMPIRE];
 
 		// theaters
-		let SPACE = 0;
-		let GROUND = 1;
-		let theaters = [SPACE, GROUND];
+		const SPACE = 0;
+		const GROUND = 1;
+		const theaters = [SPACE, GROUND];
 
 		// units
-		let TRIANGLE = 0;
-		let CIRCLE = 1;
-		let SQUARE = 2;
-		let units = [TRIANGLE, CIRCLE, SQUARE];
+		const TRIANGLE = 0;
+		const CIRCLE = 1;
+		const SQUARE = 2;
+		const units = [TRIANGLE, CIRCLE, SQUARE];
 
 		// loyalties
-		let NEUTRAL = 0;
-		let IMPERIAL = 1;
-		let REBEL = 2;
+		const NEUTRAL = 0;
+		const IMPERIAL = 1;
+		const REBEL = 2;
 
-		let loyalties = [
+		const loyalties = [
 			{"name": "Neutral", "value": NEUTRAL},
 			{"name": "Imperial", "value": IMPERIAL},
 			{"name": "Rebel", "value": REBEL}
 		];
 
-		let systems = [
+		const systems = [
 			{"name": "Alderaan", "production": [
 				{"theater": GROUND, "unit": TRIANGLE, "space": 1}
 			]},
@@ -171,12 +171,12 @@
 		function update() {
 			let production = {};
 
-			for (let factionId in factions) {
-				let faction = factions[factionId];
-				for (let theaterId in theaters) {
-					let theater = theaters[theaterId];
-					for (let unitId in units) {
-						let unit = units[unitId];
+			for (const factionId in factions) {
+				const faction = factions[factionId];
+				for (const theaterId in theaters) {
+					const theater = theaters[theaterId];
+					for (const unitId in units) {
+						const unit = units[unitId];
 						for (let space = 1; space <= 3; ++space) {
 							production[faction + "-" + theater + "-" + unit + "-" + space] = 0;
 						}
@@ -184,12 +184,12 @@
 				}
 			}
 
-			for (let systemId in systems) {
-                let system = systems[systemId];
-                let loyaltyBox = system.loyaltyBox;
-				let subjugatedBox = system.subjugatedBox;
-                let sabotageBox = system.sabotageBox;
-				let units = system["production"];
+			for (const systemId in systems) {
+                const system = systems[systemId];
+                const loyaltyBox = system.loyaltyBox;
+				const subjugatedBox = system.subjugatedBox;
+                const sabotageBox = system.sabotageBox;
+				const units = system["production"];
 				let systemCell = document.getElementById("system-" + systemId);
 				systemCell.classList.remove("subjugated", "imperial", "rebel");
 
@@ -215,7 +215,7 @@
 				}
 			}
 
-			for (let i in production) {
+			for (const i in production) {
 				let productionRow = document.getElementById("production-" + i);
 				productionRow.textContent = production[i];
 			}
@@ -236,7 +236,7 @@
 			let sabotageHeader = headerRow.insertCell();
 			sabotageHeader.textContent = "Sabotage";
 
-			for (let systemId in systems) {
+			for (const systemId in systems) {
 				let system = systems[systemId];
 
 				let systemRow = loyaltyTable.insertRow();
@@ -263,8 +263,8 @@
                 subjugatedCell.appendChild(subjugatedBox);
                 system.subjugatedBox = subjugatedBox;
 
-				for (let loyaltyId in loyalties) {
-					let loyalty = loyalties[loyaltyId];
+				for (const loyaltyId in loyalties) {
+					const loyalty = loyalties[loyaltyId];
 					let loyaltyOption = document.createElement("option");
 					loyaltyOption.textContent = loyalty["name"];
 					loyaltyOption.value = loyalty["value"];
